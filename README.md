@@ -2,7 +2,7 @@ filter-json
 ===========
 
 fitler-json is a command line tool for filtering and displaying JSON logs. It
-will work with any input stream where each line is valid piece of JSON.
+will work with any input stream where each line is a valid piece of JSON.
 
 _filter-json is an early stage project used internally at www.sharelatex.com.
 Don't use it for anything critical yet._
@@ -13,12 +13,39 @@ Filtering
 To filter out lines and only display those that match a certain condition, use
 the `-f` or `--filter` option, with an argument:
 
-    $ cat log.json | filter-json -f "user.name == 'john' and logLevel > 2"
+    $ cat log.json | filter-json -f "user.name == 'John' and logLevel > 2"
+    {
+        "user" : {
+            "age" : 32,
+            "name" : "John"
+        },
+        logLevel: 2
+    }
+    ...
 
 The argument to `-f` can be any valid coffeescript expression. A JSON line is
 allowed through if this expression evaluates to a truthy javascript value.
 Multiple `-f` arguments may be given in which case the JSON must match _all_ of
 them. All properties of the JSON object are exposed to this expression.
+
+Selecting Attributes
+--------------------
+
+Since your JSON objects may be quite large, you can choose to display only
+certain attributes using the `-s` or `--select` options:
+
+    $ cat log.json | filter-json -s "user.name"
+    {
+        "user" : {
+            "name" : "John"
+        }
+    }
+    {
+        "user" : {
+            "name" : "Paul"
+        }
+    }
+    ...      
 
 Output Format
 -------------
@@ -26,7 +53,7 @@ Output Format
 By default `filter-json` will return pretty-printed JSON of all the records that
 are filtered through.
 
-    $ cat log.json | filter-json --select "user.name, user.age"
+    $ cat log.json | filter-json
     {
         "user" : {
             "age" : 32,
@@ -44,8 +71,8 @@ are filtered through.
     ...      
 
 If you supply the `-t`, or `--table`, option then filter-json will display each
-filtered line as a row in a table, with columns specified by `-s`, or
-`--select`:
+filtered line as a row in a table. Only columns specified by `-s`, or `--select`
+will be displayed:
 
     $ cat log.json | filter-json -t --select "user.name, user.age"
     -------------------------------------------------
@@ -54,6 +81,7 @@ filtered line as a row in a table, with columns specified by `-s`, or
     | John                   | 32                   |
     | Paul                   | 25                   |
     | George                 | 54                   |
+    ...
 
 Columns have a default width of 30 characters which can be overridden with the
 `-w` or `--column-widths` option:
@@ -65,6 +93,7 @@ Columns have a default width of 30 characters which can be overridden with the
     | John | 32 |
     | Paul | 25 |
     | G... | 54 |
+    ...
 
 Text which does not fit in the cell is truncated. 
 

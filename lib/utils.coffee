@@ -16,3 +16,15 @@ module.exports =
 				return object[attribute]
 		else
 			return
+	
+	insertAttribute: (object, path, value) ->
+		path_parts = path.split(".")
+		attribute = path_parts[0]
+		remaining_path = path_parts.slice(1).join(".")
+		if remaining_path == ""
+			object[attribute] = value
+		else
+			if !object[attribute]?
+				object[attribute] = {}
+			@insertAttribute(object[attribute], remaining_path, value)
+

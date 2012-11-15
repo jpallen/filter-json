@@ -62,6 +62,7 @@ if argv.table
 else
 	formatter = new JsonFormatter
 		output: process.stdout
+		attributes: argv["select"]
 
 filter = new JsonFilter
 	input: process.stdin
