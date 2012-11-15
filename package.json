@@ -1,0 +1,12 @@
+{
+	"name": "filter-json",
+	"description": "A command line tool for filtering JSON logs"
+	"version": "0.0.1",
+	"author": "James Allen <jamesallen0108@gmail.com>",
+	"dependencies": {
+		"coffee-script": "1.4.x",
+		"underscore": "1.4.x",
+		"optimist": "0.3.x"
+	},
+	"bin" : "./bin/filter-json"
+}

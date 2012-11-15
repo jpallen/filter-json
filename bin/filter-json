@@ -1,0 +1,72 @@
+#!/usr/bin/env coffee
+_ = require("underscore")
+TableFormatter = require "../lib/table-formatter"
+JsonFormatter  = require "../lib/json-formatter"
+JsonFilter     = require "../lib/json-filter"
+CoffeeScriptFilter = require "../lib/coffee-script-filter"
+
+optimist = require("optimist")
+argv = optimist
+	.options("f", {
+		alias: "filter"
+		describe: "A coffeescript expression used to filter the JSON entries"
+	})
+	.options("s", {
+		alias: "select"
+		describe: "A comma separated list of attributes to show in the output"
+	})
+	.options("t", {
+		alias: "table"
+		boolean: true
+		describe: "Show the output in a table rather than as JSON"
+	})
+	.options("w", {
+		alias: "column-widths"
+		describe: "A comma separate list of widths for the table columns"
+	})
+	.options("h", {
+		alias: "help"
+		describe: "Show this help message"
+	})
+	.usage("Usage: filter-json [OPTS]")
+	.argv
+
+if argv.help
+	optimist.showHelp()
+	process.exit(0)
+
+ensureArray = (array) ->
+	if !array? or !array
+		array = []
+	if typeof array != "object"
+		array = [array]
+	return array
+
+argv.filter = ensureArray(argv.filter)
+argv.select = ensureArray(argv.select)
+argv["column-widths"] = ensureArray(argv["column-widths"])
+
+if argv.select.length > 0
+	argv.select = argv.select.join(",").split(/, */)
+
+if argv["column-widths"].length > 0
+	argv["column-widths"] = argv["column-widths"].join(",").split(/, */)
+
+argv["column-widths"] = _.map argv["column-widths"], (width) -> parseInt(width, 10)
+
+if argv.table
+	formatter = new TableFormatter
+		output: process.stdout,
+		columns: argv["select"]
+		widths: argv["column-widths"]
+else
+	formatter = new JsonFormatter
+		output: process.stdout
+
+filter = new JsonFilter
+	input: process.stdin
+	formatter: formatter
+	filters: (new CoffeeScriptFilter(filter)) for filter in argv.filter
+
+process.stdin.resume()
+
