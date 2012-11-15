@@ -19,7 +19,7 @@ the `-f` or `--filter` option, with an argument:
             "age" : 32,
             "name" : "John"
         },
-        logLevel: 2
+        "logLevel": 2
     }
     ...
 
@@ -59,14 +59,14 @@ are filtered through.
             "age" : 32,
             "name" : "John"
         },
-        logLevel: 2
+        "logLevel": 2
     }
     {
         "user" : {
             "age" : 25,
             "name" : "Paul"
         },
-        logLevel: 2
+        "logLevel": 2
     }
     ...      
 
@@ -103,8 +103,7 @@ Todo
 This project was thrown together out of a quick need and could do with some TLC
 if it is to maintained in the future. Here is rough todo list:
 
-* Get select working on JSON output.
 * Sanity checking of inputs from command line and in construction of internal
-  classed.
+  classes.
 * Set up a test harness
 
