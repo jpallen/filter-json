@@ -5,7 +5,7 @@ fitler-json is a command line tool for filtering and displaying JSON logs. It
 will work with any input stream where each line is valid piece of JSON.
 
 _filter-json is an early stage project used internally at www.sharelatex.com.
-Don't use it for anything critical and please send me feedback!_
+Don't use it for anything critical yet._
 
 Filtering
 ---------
@@ -15,18 +15,18 @@ the `-f` or `--filter` option, with an argument:
 
     $ cat log.json | filter-json -f "user.name == 'john' and logLevel > 2"
 
-The argument to `-f` can be any valid coffeescript and each JSON line is
-displayed if it evaluates to a truthy javascript condition. Multiple `-f`
-arguments may be given in which case the JSON must match _all_ of them. All
-properties of the JSON object are exposed to this expression.
+The argument to `-f` can be any valid coffeescript expression. A JSON line is
+allowed through if this expression evaluates to a truthy javascript value.
+Multiple `-f` arguments may be given in which case the JSON must match _all_ of
+them. All properties of the JSON object are exposed to this expression.
 
 Output Format
 -------------
 
-By default filter-json will return pretty-printed JSON of all the records that
+By default `filter-json` will return pretty-printed JSON of all the records that
 are filtered through.
 
-    $ cat log.json | filter-json -t --select "user.name, user.age"
+    $ cat log.json | filter-json --select "user.name, user.age"
     {
         "user" : {
             "age" : 32,
